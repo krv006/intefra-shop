@@ -16,12 +16,15 @@ class User(AbstractUser):
     last_name = None
     email = EmailField(unique=True)
     name = CharField(max_length=255)
-    is_active = BooleanField(default=False)
-    type = CharField(max_length=25, choices=Type.choices, default=Type.USER, verbose_name="user type")
+    is_active = BooleanField(db_default=False)
+    type = CharField(max_length=25, choices=Type.choices, db_default=Type.USER, verbose_name="user type")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
 
 
 class Operator(Model):
@@ -34,3 +37,6 @@ class Operator(Model):
     class Meta:
         verbose_name = 'Operator'
         verbose_name_plural = 'Operators'
+
+    def __str__(self):
+        return f"{self.user}-{self.user.email}"
